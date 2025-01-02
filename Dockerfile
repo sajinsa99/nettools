@@ -1,19 +1,21 @@
 FROM alpine:latest
 
+RUN apk update --no-cache --quiet --no-progress && apk upgrade --no-cache --quiet --no-progress
+
 # Mettre à jour les dépôts et installer les outils requis
-RUN apk --no-cache update && apk --no-cache upgrade ** apk add --no-cache \
-    bash \
+RUN apk add --no-cache --quiet --no-progress bash \
     which \
-    bind-tools \  # Pour dig et nslookup
-    nmap \         # Pour le scan des réseaux
-    whois \        # Pour les informations de domaine
-    curl \         # Pour les requêtes HTTP comme crt.sh
-    wget \         # Alternative à curl
-    tar \          # Pour décompresser les archives
-    && rm -rf /var/cache/apk/*
+    bind-tools \
+    nmap \
+    whois \
+    curl \
+    wget \
+    tar
+
+RUN rm -rf /var/cache/apk/*
 
 # Installer subfinder (outil externe)
-RUN wget https://github.com/projectdiscovery/subfinder/releases/latest/download/subfinder-linux-amd64.tar.gz \
+RUN wget https://github.com/projectdiscovery/subfinder/releases/download/v2.6.7/subfinder_2.6.7_linux_amd64.zip \
     && tar -xvzf subfinder-linux-amd64.tar.gz \
     && mv subfinder-linux-amd64 /usr/local/bin/subfinder \
     && chmod +x /usr/local/bin/subfinder \
